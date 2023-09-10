@@ -45,7 +45,8 @@ class ModelTrainer:
         self.labels = dataset.iloc[:, -1].values
 
     def train_model(self):
-        X_train, X_test, y_train, y_test = train_test_split(self.features, self.labels, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.features, self.labels, test_size=0.2, random_state=42)
         classifier = RandomForestClassifier()
         classifier.fit(X_train, y_train)
         y_pred = classifier.predict(X_test)
@@ -75,7 +76,8 @@ class GUI:
         self.url_entry = tk.Entry(self.window, width=50)
         self.url_entry.pack()
 
-        self.scrape_button = tk.Button(self.window, text="Scrape", command=self.scrape_website)
+        self.scrape_button = tk.Button(
+            self.window, text="Scrape", command=self.scrape_website)
         self.scrape_button.pack()
 
         self.sentiment_label = tk.Label(self.window, text="Sentiment:")

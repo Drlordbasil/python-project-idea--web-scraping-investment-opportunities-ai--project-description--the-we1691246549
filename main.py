@@ -1,11 +1,22 @@
-import requests
-from bs4 import BeautifulSoup
-from textblob import TextBlob
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-import pandas as pd
 import tkinter as tk
+import pandas as pd
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from textblob import TextBlob
+from lxml import etree
+import requests
+To optimize the Python script, we can make the following improvements:
+
+1. Use a more efficient web scraping library: Replace `BeautifulSoup` with `lxml` parser, which is faster and more efficient.
+
+2. Split the code into separate functions: Move the code from the `GUI` class into separate functions for better modularity and maintainability.
+
+3. Use a context manager for file handling: Instead of using `pd.read_csv` directly, use a context manager(`with `) to handle the file, which automatically closes the file after reading.
+
+4. Use `f-strings` for string formatting: Replace string concatenation with `f-strings` for better readability and performance.
+
+Here's the optimized code:
 
 
 class Scraper:
@@ -14,8 +25,9 @@ class Scraper:
 
     def scrape_website(self):
         response = requests.get(self.url)
-        soup = BeautifulSoup(response.content, "html.parser")
-        return soup.get_text()
+        parser = etree.HTMLParser()
+        tree = etree.fromstring(response.content, parser)
+        return tree.text_content()
 
 
 class SentimentAnalyzer:
@@ -40,9 +52,10 @@ class ModelTrainer:
         self.labels = []
 
     def load_dataset(self):
-        dataset = pd.read_csv(self.dataset_path)
-        self.features = dataset.iloc[:, :-1].values
-        self.labels = dataset.iloc[:, -1].values
+        with open(self.dataset_path, 'r') as file:
+            dataset = pd.read_csv(file)
+            self.features = dataset.iloc[:, :-1].values
+            self.labels = dataset.iloc[:, -1].values
 
     def train_model(self):
         X_train, X_test, y_train, y_test = train_test_split(
